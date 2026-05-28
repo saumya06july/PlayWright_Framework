@@ -54,7 +54,7 @@ jobs:
           echo "Allure report contents:"
           ls -R allure-report || echo "Allure report not found"
 
-          echo "Playwright built-in report contents:"
+          echo "Playwright report contents:"
           ls -R playwright-report || echo "Playwright report not found"
 
       # 9️⃣ Upload Allure Report
@@ -113,11 +113,20 @@ jobs:
       # 5️⃣ Prepare reports for GitHub Pages
       - name: Prepare reports for deployment
         run: |
-          mkdir -p gh-pages-deploy
+          mkdir -p gh-pages-deploy/allure-report
+          mkdir -p gh-pages-deploy/playwright-report
 
-          [ -d "allure-report" ] && cp -r allure-report gh-pages-deploy/
+          if [ -d "allure-report" ]; then
+            cp -r allure-report/* gh-pages-deploy/allure-report/
+          else
+            echo "Allure report not found"
+          fi
 
-          [ -d "playwright-report" ] && cp -r playwright-report gh-pages-deploy/
+          if [ -d "playwright-report" ]; then
+            cp -r playwright-report/* gh-pages-deploy/playwright-report/
+          else
+            echo "Playwright report not found"
+          fi
 
           echo "Combined reports directory contents:"
           ls -R gh-pages-deploy
